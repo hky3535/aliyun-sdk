@@ -15,35 +15,36 @@ class AliyunDNS:
 
     def params(self, params): # 请求体公共加密
         params = {
-            'Format': 'JSON', 
-            'Version': '2015-01-09', 
-            'AccessKeyId': self.ACCESS_KEY_ID, 
-            'SignatureMethod': 'HMAC-SHA1', 
-            'SignatureVersion': '1.0',
-            'SignatureNonce': str(time.time()), 
-            'Timestamp': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), 
+            "Format": "JSON", 
+            "Version": "2015-01-09", 
+            "AccessKeyId": self.ACCESS_KEY_ID, 
+            "SignatureMethod": "HMAC-SHA1", 
+            "SignatureVersion": "1.0",
+            "SignatureNonce": str(time.time()), 
+            "Timestamp": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), 
             **params
         }
         # 加密验证签名部分
         sign = sorted(params.items(), key=lambda x: x[0])
-        sign = '&'.join([urllib.parse.quote_plus(k) + '=' + urllib.parse.quote_plus(v) for k, v in sign])
-        sign = 'GET&%2F&' + urllib.parse.quote_plus(sign)
+        sign = "&".join([urllib.parse.quote_plus(k) + "=" + urllib.parse.quote_plus(v) for k, v in sign])
+        sign = "GET&%2F&" + urllib.parse.quote_plus(sign)
         sign = base64.b64encode(
             hmac.new(
-                self.ACCESS_KEY_SECRET.encode('utf-8') + b'&', 
-                sign.encode('utf-8'), 
+                self.ACCESS_KEY_SECRET.encode("utf-8") + b"&", 
+                sign.encode("utf-8"), 
                 hashlib.sha1
             ).digest()
-        ).decode('utf-8')
-        params['Signature'] = sign
+        ).decode("utf-8")
+        params["Signature"] = sign
         return params
 
-    def DescribeDomainRecords(self, DomainName, PageSize=100): # 查看所有解析记录
+    def DescribeDomainRecords(self, DomainName, PageNumber=1, PageSize=100): # 查看所有解析记录
         response = requests.get(
             url=self.BASE_URL, 
             params=self.params(params={
-                'Action': 'DescribeDomainRecords',
-                'DomainName': DomainName, 
+                "Action": "DescribeDomainRecords",
+                "DomainName": DomainName, 
+                "PageNumber": str(PageNumber), 
                 "PageSize": str(PageSize)
             })
         )
@@ -54,9 +55,9 @@ class AliyunDNS:
         response = requests.get(
             url=self.BASE_URL, 
             params=self.params(params={
-                'Action': 'AddDomainRecord',
-                'DomainName': DomainName,
-                'RR': RR, 'Type': Type, 'Value': Value, 'Line': Line, 'TTL': str(TTL)
+                "Action": "AddDomainRecord",
+                "DomainName": DomainName,
+                "RR": RR, "Type": Type, "Value": Value, "Line": Line, "TTL": str(TTL)
             })
         )
         assert response.status_code == 200
@@ -66,8 +67,8 @@ class AliyunDNS:
         response = requests.get(
             url=self.BASE_URL, 
             params=self.params(params={
-                'Action': 'DeleteDomainRecord',
-                'RecordId': RecordId, 
+                "Action": "DeleteDomainRecord",
+                "RecordId": RecordId, 
             })
         )
         assert response.status_code == 200
