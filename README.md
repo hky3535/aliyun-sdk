@@ -1,9 +1,14 @@
 # aliyun-sdk
-阿里云SDK简化版的python实现，目前实现了阿里云DNS的解析服务
+阿里云SDK简化版的python实现
+
+## 目前已实现功能
+
+- [x] 云解析
+- [ ] 轻量应用服务器
 
 ## 原始项目及SDK文档
 
-`https://next.api.aliyun.com/api-tools/sdk?spm=5176.29677750.nav-v2-dropdown-menu-3.d_main_2_1.e939154aGNkTUb&scm=20140722.M_9489623._.V_1`  
+`https://next.api.aliyun.com/document`  
 `https://github.com/aliyun/alibabacloud-python-sdk`
 
 ## AccessKey获取方法
