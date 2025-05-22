@@ -38,6 +38,18 @@ class AliyunDNS:
         params["Signature"] = sign
         return params
 
+    def DescribeDomains(self, PageNumber=1, PageSize=100): # 查看所有域名
+        response = requests.get(
+            url=self.BASE_URL, 
+            params=self.params(params={
+                "Action": "DescribeDomains", 
+                "PageNumber": str(PageNumber), 
+                "PageSize": str(PageSize)
+            })
+        )
+        assert response.status_code == 200
+        return response.json()
+    
     def DescribeDomainRecords(self, DomainName, PageNumber=1, PageSize=100): # 查看所有解析记录
         response = requests.get(
             url=self.BASE_URL, 
@@ -73,4 +85,3 @@ class AliyunDNS:
         )
         assert response.status_code == 200
         return response.json()
-
